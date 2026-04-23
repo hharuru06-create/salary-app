@@ -8,6 +8,51 @@
 <link rel="manifest" href="manifest.json">
 
 <style>
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  margin-top: 6px;
+  user-select: none;
+}
+
+/* チェックボックス本体を隠す */
+.checkbox-label input {
+  display: none;
+}
+
+/* 見た目用ボックス */
+.checkmark {
+  width: 22px;
+  height: 22px;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* チェック時の背景 */
+.checkbox-label input:checked + .checkmark {
+  background: #007AFF;
+  border-color: #007AFF;
+}
+
+/* チェックマーク（位置を中央固定） */
+.checkbox-label input:checked + .checkmark::after {
+  content: "";
+  width: 6px;
+  height: 12px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  position: absolute;
+}
+
+
 /* 全要素に適用（はみ出し防止の基本） */
 * {
   box-sizing: border-box;
@@ -49,17 +94,6 @@ input[type="time"] {
   background: #fff;
 }
 
-/* チェックボックスは100%にしない */
-input[type="checkbox"] {
-  width: auto;
-  display: inline-block;
-  margin-right: 5px;
-}
-body {
-  font-family: sans-serif;
-  padding: 10px;
-  background: #f5f5f5;
-}
 
 /* ボタン */
 button {
@@ -157,7 +191,11 @@ button {
   <option value="1300">作業（1300円）</option>
 </select>
 
-<label><input type="checkbox" id="manual"> 手入力</label>
+<label class="checkbox-label">
+  <input type="checkbox" id="manual">
+  <span class="checkmark"></span>
+  手入力
+</label>
 
 <div id="manualBox" style="display:none;">
 <input type="number" id="manualPay" placeholder="金額入力">

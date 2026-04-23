@@ -101,25 +101,33 @@ document.getElementById("monthPicker").addEventListener("change", function() {
 // ===== 保存 =====
 function saveData() {
   if (!selectedDate) {
-    alert("日付を選択して");
+    alert("日付を選択してください");
     return;
   }
 
   const result = document.getElementById("result").innerText;
   if (!result) {
-    alert("金額を計算して");
+    alert("金額を計算してください");
     return;
   }
 
   const value = Number(result.replace(" 円",""));
 
   let data = JSON.parse(localStorage.getItem("salaryData") || "[]");
-
   data.push({ date: selectedDate, value });
-
   localStorage.setItem("salaryData", JSON.stringify(data));
 
   renderList();
+
+  // 🔥 ここからリセット処理
+  document.getElementById("start").value = "";
+  document.getElementById("end").value = "";
+  document.getElementById("type").value = "1250";
+  document.getElementById("manual").checked = false;
+  document.getElementById("manualBox").style.display = "none";
+  document.getElementById("manualPay").value = "";
+  document.getElementById("result").innerText = "";
+  selectedDate = "";
 }
 
 // ===== 一覧 =====
