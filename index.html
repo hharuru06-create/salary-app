@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>給料管理</title>
+
+<link rel="manifest" href="manifest.json">
+
+<style>
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  margin-top: 6px;
+  user-select: none;
+}
+
+/* チェックボックス本体を隠す */
+.checkbox-label input {
+  display: none;
+}
+
+/* 見た目用ボックス */
+.checkmark {
+  width: 22px;
+  height: 22px;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* チェック時の背景 */
+.checkbox-label input:checked + .checkmark {
+  background: #007AFF;
+  border-color: #007AFF;
+}
+
+/* チェックマーク（位置を中央固定） */
+.checkbox-label input:checked + .checkmark::after {
+  content: "";
+  width: 6px;
+  height: 12px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  position: absolute;
+}
+
+
+/* 全要素に適用（はみ出し防止の基本） */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: sans-serif;
+  padding: 10px;
+  background: #f5f5f5;
+  margin: 0; /* 余計なマージンをカット */
+}
+
+/* カード（paddingを少し調整） */
+.card {
+  background: white;
+  padding: 15px; /* 少し広げると綺麗に見えます */
+  border-radius: 10px;
+  margin-bottom: 12px;
+  overflow: hidden; /* 万が一の中身のはみ出しをカット */
+}
+
+/* 入力（ここが修正のキモ） */
+input, select, button {
+  display: block; /* ブロック要素化して確実に100%に */
+  width: 100%;
+  padding: 10px;
+  margin-top: 6px;
+  margin-bottom: 10px;
+  font-size: 16px;
+  border: 1px solid #ddd; /* 枠線を明示 */
+  border-radius: 6px;
+  -webkit-appearance: none; /* iOS特有のスタイルをリセット */
+  appearance: none;
+}
+
+/* 時間入力の高さ調整 */
+input[type="time"] {
+  height: 45px; /* iOSで文字が切れない適度な高さ */
+  background: #fff;
+}
+
+
+/* ボタン */
+button {
+  background: #007AFF;
+  color: white;
+  border: none;
+  border-radius: 6px;
+}
+
+/* 一覧 */
+
+.list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+/* 左（テキスト） */
+.list-item span {
+  flex: 1;
+  font-size: 18px;
+  text-align: left;
+  white-space: nowrap; /* ← 改行防止 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 右（ボタン） */
+.button-group {
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+/* ボタン（少し大きく） */
+.small-btn {
+  width: auto !important;
+  padding: 6px 10px;  /* ← 少し大きく */
+  font-size: 13px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+/* カレンダー */
+#calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+  margin-top: 8px;
+}
+
+.day {
+  background: #fff;
+  padding: 6px;
+  text-align: center;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+/* 曜日 */
+.week {
+  font-size: 11px;
+  text-align: center;
+}
+
+.sun { color: red; }
+.sat { color: blue; }
+
+.day:hover {
+  background: #007AFF;
+  color: white;
+}
+
+.selected {
+  background: #007AFF;
+  color: white;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+<h2>給料計算</h2>
+
+開始 <input type="time" id="start">
+終了 <input type="time" id="end">
+
+<select id="type">
+  <option value="1250">運営（1250円）</option>
+  <option value="1300">作業（1300円）</option>
+</select>
+
+<label class="checkbox-label">
+  <input type="checkbox" id="manual">
+  <span class="checkmark"></span>
+  手入力
+</label>
+
+<div id="manualBox" style="display:none;">
+<input type="number" id="manualPay" placeholder="金額入力">
+</div>
+
+<button onclick="calc()">計算</button>
+
+<h3 id="result"></h3>
+</div>
+
+<div class="card">
+<h2>一覧</h2>
+
+<input type="month" id="monthPicker">
+
+<div id="calendar"></div>
+
+<button onclick="saveData()">この日を保存</button>
+
+<h3 id="total"></h3>
+<ul id="list"></ul>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
